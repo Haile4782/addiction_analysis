@@ -66,9 +66,8 @@ The project includes **7 key visualizations** highlighting:
 * Correlation insights
 
 Final charts are stored in:
-
 visuals/
-
+'''
 ## 📁 Project Structure
 
 capstone_project/
@@ -94,19 +93,20 @@ capstone_project/
 * Pandas
 * NumPy
 * Matplotlib and Seaborn
-* VS Code
-
+* Jupyter Notebook
+* Plotly
+* Sckite Learn
+'''
 ## 🚀 How to Run
 
 ### 1️⃣ Clone the repository
 git clone <your-repo-link>
-cd capstone_project
+cd addiction_analysis
 
 ### 2️⃣ Run data cleaning pipeline
 python src/data_cleaning.py
 
-### 3️⃣ Open EDA notebook
-notebooks/eda1.ipynb - current(uncleaned) dataset  
+### 3️⃣ Open EDA notebook  
 notebooks/eda.ipynb  - cleaned dataset
 
 ## 📈 Key Insights (Example - update after final EDA)
@@ -125,10 +125,6 @@ Through this project, I developed skills in:
 * Data storytelling
 * Reproducible workflows
 * Project structuring for analytics
-
-## 🤝 Team
-
-Capstone project completed by a team of four data analysts.
 
 ## 📌 Future Improvements
 

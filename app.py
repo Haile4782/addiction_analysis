@@ -33,19 +33,19 @@ mental_health = st.selectbox("Mental health status", ["Poor", "Average", "Good"]
 social_support = st.selectbox("Social support", ["None", "Weak", "Moderate", "Strong"])
 
 if st.button("Predict"):
-    # Create a sample dataframe
-    sample_data = pd.DataFrame({
+    # Create input with EXACT same columns and order as training data
+    input_data = pd.DataFrame({
         'id': [1],
-        'name': ['Sample'],
+        'name': ['Sample User'],
         'age': [age],
         'gender': [gender],
         'country': ['Unknown'],
         'city': ['Unknown'],
         'education_level': ['Unknown'],
         'employment_status': ['Unknown'],
-        'annual_income_usd': [50000],  # dummy
+        'annual_income_usd': [50000],
         'marital_status': ['Unknown'],
-        'children_count': [0],  # dummy
+        'children_count': [0],
         'smokes_per_day': [smokes_per_day],
         'drinks_per_week': [drinks_per_week],
         'age_started_smoking': [age if smokes_per_day > 0 else 0],
@@ -62,19 +62,15 @@ if st.button("Predict"):
         'therapy_history': ['None']
     })
 
-    # Preprocess
-    sample_processed = create_target_variable(sample_data)
-    X, _ = encode_features(sample_processed)
+    # Apply the same preprocessing pipeline as training
+    processed = create_target_variable(input_data)
+    X, _ = encode_features(processed)
 
     # Predict
     prediction = model.predict(X)[0]
     risk_level = "High Risk" if prediction == 1 else "Low Risk"
 
-    st.success(f"Predicted Addiction Risk: {risk_level}")
-
-    # Show score
-    score = sample_processed['addiction_score'].iloc[0]
-    st.info(f"Addiction Score: {score} (based on smoking + drinking)")
-
-st.write("---")
-st.write("This app demonstrates the ML model trained on addiction data.")
+    st.success(f"**Predicted Addiction Risk: {risk_level}**")
+    
+    score = processed['addiction_score'].iloc[0]
+    st.info(f"Calculated Addiction Score: **{score:.2f}**")

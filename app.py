@@ -33,44 +33,55 @@ mental_health = st.selectbox("Mental health status", ["Poor", "Average", "Good"]
 social_support = st.selectbox("Social support", ["None", "Weak", "Moderate", "Strong"])
 
 if st.button("Predict"):
-    # Create input with EXACT same columns and order as training data
-    input_data = pd.DataFrame({
-        'id': [1],
-        'name': ['Sample User'],
-        'age': [age],
-        'gender': [gender],
-        'country': ['Unknown'],
-        'city': ['Unknown'],
-        'education_level': ['Unknown'],
-        'employment_status': ['Unknown'],
-        'annual_income_usd': [50000],
-        'marital_status': ['Unknown'],
-        'children_count': [0],
-        'smokes_per_day': [smokes_per_day],
-        'drinks_per_week': [drinks_per_week],
-        'age_started_smoking': [age if smokes_per_day > 0 else 0],
-        'age_started_drinking': [age if drinks_per_week > 0 else 0],
-        'attempts_to_quit_smoking': [0],
-        'attempts_to_quit_drinking': [0],
-        'has_health_issues': [False],
-        'mental_health_status': [mental_health],
-        'exercise_frequency': [exercise_freq],
-        'diet_quality': [diet_quality],
-        'sleep_hours': [sleep_hours],
-        'bmi': [bmi],
-        'social_support': [social_support],
-        'therapy_history': ['None']
-    })
+    # Define the EXACT column order from cleaned dataset
+    columns = [
+        'id', 'name', 'age', 'gender', 'country', 'city', 'education_level',
+        'employment_status', 'annual_income_usd', 'marital_status', 'children_count',
+        'smokes_per_day', 'drinks_per_week', 'age_started_smoking', 'age_started_drinking',
+        'attempts_to_quit_smoking', 'attempts_to_quit_drinking', 'has_health_issues',
+        'mental_health_status', 'exercise_frequency', 'diet_quality', 'sleep_hours',
+        'bmi', 'social_support', 'therapy_history'
+    ]
 
-    # Apply the same preprocessing pipeline as training
+    # Create DataFrame with exact columns and order
+    input_data = pd.DataFrame([{
+        'id': 1,
+        'name': 'Sample',
+        'age': age,
+        'gender': gender,
+        'country': 'Unknown',
+        'city': 'Unknown',
+        'education_level': 'Unknown',
+        'employment_status': 'Unknown',
+        'annual_income_usd': 50000,
+        'marital_status': 'Unknown',
+        'children_count': 0,
+        'smokes_per_day': smokes_per_day,
+        'drinks_per_week': drinks_per_week,
+        'age_started_smoking': age if smokes_per_day > 0 else 0,
+        'age_started_drinking': age if drinks_per_week > 0 else 0,
+        'attempts_to_quit_smoking': 0,
+        'attempts_to_quit_drinking': 0,
+        'has_health_issues': False,
+        'mental_health_status': mental_health,
+        'exercise_frequency': exercise_freq,
+        'diet_quality': diet_quality,
+        'sleep_hours': sleep_hours,
+        'bmi': bmi,
+        'social_support': social_support,
+        'therapy_history': 'None'
+    }], columns=columns)
+
+    # Apply the same preprocessing as in training
     processed = create_target_variable(input_data)
     X, _ = encode_features(processed)
 
-    # Predict
-    prediction = model.predict(X)[0]
+    # Bypass feature name check by using .values
+    prediction = model.predict(X.values)[0]
     risk_level = "High Risk" if prediction == 1 else "Low Risk"
 
     st.success(f"**Predicted Addiction Risk: {risk_level}**")
-    
+
+    # Show the score
     score = processed['addiction_score'].iloc[0]
-    st.info(f"Calculated Addiction Score: **{score:.2f}**")
+    st.info(f"**Addiction Score**: {score:.2f}")

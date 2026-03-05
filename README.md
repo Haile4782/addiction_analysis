@@ -67,7 +67,7 @@ The project includes **7 key visualizations** highlighting:
 
 Final charts are stored in:
 visuals/
-'''
+---
 ## 📁 Project Structure
 
 capstone_project/
@@ -86,9 +86,9 @@ capstone_project/
 │   └── data_cleaning.py
 │
 └── README.md
-
+---
 ## ⚙️ Technologies Used
-
+---
 * Python
 * Pandas
 * NumPy
@@ -96,7 +96,7 @@ capstone_project/
 * Jupyter Notebook
 * Plotly
 * Sckite Learn
-'''
+---
 ## 🚀 How to Run
 
 ### 1️⃣ Clone the repository

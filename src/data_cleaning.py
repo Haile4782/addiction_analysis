@@ -63,6 +63,24 @@ def clean_data(df):
 
 
 # ---------------------------
+# CREATE TARGET
+# ---------------------------
+def create_target_variable(df):
+    """Compute addiction score and binary risk label.
+
+    The score is a simple sum of smoking and drinking frequencies; the risk
+    flag is set to 1 for individuals whose score exceeds a sensible high
+    threshold (mirroring the "high" addiction level used in EDA).
+    """
+    df = df.copy()
+    # basic addiction score used in visualizations
+    df["addiction_score"] = df["smokes_per_day"] + df["drinks_per_week"]
+
+    # threshold chosen consistent with notebook bins: >25 considered high risk
+    df["addiction_risk"] = (df["addiction_score"] > 25).astype(int)
+    return df
+
+# ---------------------------
 # SAVE DATA
 # ---------------------------
 def save_data(df, path):

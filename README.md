@@ -86,7 +86,6 @@ capstone_project/
 ├── src/
 │   └── data_cleaning.py
 │
-├── requirements.txt
 └── README.md
 
 ## ⚙️ Technologies Used
@@ -100,33 +99,26 @@ capstone_project/
 ## 🚀 How to Run
 
 ### 1️⃣ Clone the repository
-
 git clone <your-repo-link>
 cd capstone_project
 
-### 2️⃣ Install dependencies
-
-pip install -r requirements.txt
-
-### 3️⃣ Run data cleaning pipeline
-
+### 2️⃣ Run data cleaning pipeline
 python src/data_cleaning.py
 
-### 4️⃣ Open EDA notebook
-
+### 3️⃣ Open EDA notebook
 notebooks/eda1.ipynb - current(uncleaned) dataset  
 notebooks/eda.ipynb  - cleaned dataset
 
-## 📈 Key Insights (Example — update after final EDA)
+## 📈 Key Insights (Example - update after final EDA)
 
 * Higher smoking frequency correlates with poorer mental health
 * Lower exercise frequency associates with higher BMI
-* Income shows moderate relationship with drinking patterns
+* Income shows a moderate relationship with drinking patterns
 * Strong social support relates to healthier lifestyle indicators
 
 ## 📚 Learning Outcomes
 
-Through this project I developed skills in:
+Through this project, I developed skills in:
 
 * Data preprocessing & validation
 * Exploratory analysis

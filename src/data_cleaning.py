@@ -1,101 +1,73 @@
 import os
 import pandas as pd
 
-print("Current working directory:", os.getcwd())
-
-
-# ---------------------------
-# LOAD DATA
-# ---------------------------
 def load_data(path):
     """Load dataset from CSV"""
-    return pd.read_csv(path)
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"File not found: {path}")
+    df = pd.read_csv(path)
+    print(f"Loaded data: {df.shape}")
+    return df
 
 
-# ---------------------------
-# HANDLE OUTLIERS (IQR METHOD)
-# ---------------------------
 def cap_outliers(df, col):
     """Cap outliers using IQR method"""
     Q1 = df[col].quantile(0.25)
     Q3 = df[col].quantile(0.75)
     IQR = Q3 - Q1
-
     lower = Q1 - 1.5 * IQR
     upper = Q3 + 1.5 * IQR
-
     df[col] = df[col].clip(lower, upper)
     return df
 
 
-# ---------------------------
-# CLEAN DATA
-# ---------------------------
 def clean_data(df):
+    """Clean dataset: duplicates, missing, outliers, logical checks"""
     df = df.copy()
 
     print("\n🔹 Initial shape:", df.shape)
 
-    # 1️⃣ Remove duplicates
+    # Remove duplicates
     df = df.drop_duplicates()
 
-    # 2️⃣ Handle missing values
+    # Handle missing values
     df["social_support"] = df["social_support"].fillna("Unknown")
 
-    # 3️⃣ Outlier capping
-    outlier_cols = [
-        "smokes_per_day",
-        "drinks_per_week",
-        "sleep_hours",
-        "bmi"
-    ]
-
+    # Cap outliers in numeric columns
+    outlier_cols = ["smokes_per_day", "drinks_per_week", "sleep_hours", "bmi"]
     for col in outlier_cols:
-        df = cap_outliers(df, col)
+        if col in df.columns:
+            df = cap_outliers(df, col)
 
-    # 4️⃣ Logical checks
+    # Logical checks
     df = df[df["age_started_smoking"] <= df["age"]]
     df = df[df["age_started_drinking"] <= df["age"]]
 
     print("✅ Final shape after cleaning:", df.shape)
-
     return df
 
 
-# ---------------------------
-# CREATE TARGET
-# ---------------------------
 def create_target_variable(df):
-    """Compute addiction score and binary risk label.
-
-    The score is a simple sum of smoking and drinking frequencies; the risk
-    flag is set to 1 for individuals whose score exceeds a sensible high
-    threshold (mirroring the "high" addiction level used in EDA).
-    """
+    """Create addiction_score and binary risk label"""
     df = df.copy()
-    # basic addiction score used in visualizations
     df["addiction_score"] = df["smokes_per_day"] + df["drinks_per_week"]
-
-    # threshold chosen consistent with notebook bins: >25 considered high risk
     df["addiction_risk"] = (df["addiction_score"] > 25).astype(int)
     return df
 
-# ---------------------------
-# SAVE DATA
-# ---------------------------
+
 def save_data(df, path):
+    """Save cleaned DataFrame"""
     os.makedirs(os.path.dirname(path), exist_ok=True)
     df.to_csv(path, index=False)
-    print(f"\n💾 Cleaned data saved to: {path}")
+    print(f"💾 Saved cleaned data to: {path}")
 
 
-# ---------------------------
-# MAIN PIPELINE
-# ---------------------------
+# Standalone run (for testing)
 if __name__ == "__main__":
     raw_path = "data/raw/addiction_population_data.csv"
     clean_path = "data/cleaned/addiction_population_clean.csv"
 
     df = load_data(raw_path)
     df_clean = clean_data(df)
+    df_clean = create_target_variable(df_clean)
     save_data(df_clean, clean_path)

@@ -20,12 +20,12 @@ The goal is to uncover insights that help understand relationships between **hea
 **Source:** Kaggle - Cigarettes & Alcohol Addiction dataset
 
 The dataset contains information on **3,000 individuals**, including:
-
+---
 * Demographics (age, gender, country)
 * Lifestyle indicators (exercise, diet, sleep)
 * Behavioral metrics (smoking, drinking)
 * Health indicators (BMI, mental health)
-
+---
 
 ## 🛠️ Project Workflow
 
@@ -35,19 +35,19 @@ Steps performed:
 
 * Removed duplicate records
 * Handled missing values
-* Capped outliers using IQR method
+* Capped outliers using the IQR method
 * Applied logical validation checks
 * Standardized dataset structure
 
 After cleaning:
-
+-
 * Original records: **3000**
 * Final records: **2295**
-
+-
 ### 2️⃣ Exploratory Data Analysis (EDA)
 
 Key analyses include:
-
+---
 * Addiction distribution
 * Addiction score by gender
 * Correlation heatmap
@@ -55,7 +55,7 @@ Key analyses include:
 * Income vs addiction score
 * Mental health vs addiction score
 * Sleep hours vs addiction score
-
+---
 
 ### 3️⃣ Visualizations
 
@@ -98,7 +98,7 @@ capstone_project/
 * Sckite Learn
 ---
 ## 🚀 How to Run
-
+---
 ### 1️⃣ Clone the repository
 git clone <your-repo-link>
 cd addiction_analysis
@@ -108,30 +108,31 @@ python src/data_cleaning.py
 
 ### 3️⃣ Open EDA notebook  
 notebooks/eda.ipynb  - cleaned dataset
-
+---
 ## 📈 Key Insights (Example - update after final EDA)
-
+---
 * Higher smoking frequency correlates with poorer mental health
 * Lower exercise frequency associates with higher BMI
 * Income shows a moderate relationship with drinking patterns
 * Strong social support relates to healthier lifestyle indicators
-
+---
 ## 📚 Learning Outcomes
 
 Through this project, I developed skills in:
-
+---
 * Data preprocessing & validation
 * Exploratory analysis
 * Data storytelling
 * Reproducible workflows
 * Project structuring for analytics
-
+---
 ## 📌 Future Improvements
-
+---
 * Build predictive models
 * Perform clustering analysis
 * Create interactive dashboard (Power BI / Tableau)
-
+---
 ## 📜 License
-
+---
 This project is for educational and research purposes.
+---

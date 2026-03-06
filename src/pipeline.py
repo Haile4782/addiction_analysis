@@ -1,61 +1,63 @@
-# src/pipeline.py
 
+import joblib
 from sklearn.model_selection import train_test_split
-
-# Import from other modules
-from src.data_cleaning import load_data, clean_data, create_target_variable, save_data
+from src.data_cleaning import (
+    load_data,
+    create_addiction_score,
+    create_target_variable
+)
 from src.feature_engineering import encode_features
 from src.model_training import train_model, save_model
-from src.evaluation import evaluate_model
+from src.evaluation import (
+    evaluate_model,
+    plot_confusion_matrix,
+    plot_feature_importance
+)
 
 
-def run_pipeline(raw_data_path, clean_data_path=None, model_path=None):
-    """
-    Full ML pipeline: load → clean → engineer → split → train → evaluate → save
-    """
-    print("Starting full pipeline...")
+def run_pipeline(data_path: str, model_path: str):
 
-    # 1. Load raw data
-    df = load_data(raw_data_path)
+    # Load
+    df = load_data(data_path)
+     
+    # Create addiction score
+    df = create_addiction_score(df)
+    # Create target
+    df = create_target_variable(df)
 
-    # 2. Clean
-    df_clean = clean_data(df)
+    # Encode
+    X, y = encode_features(df)
 
-    # 3. Create target (score + binary label)
-    df_processed = create_target_variable(df_clean)
-
-    # Optional: save cleaned + target data
-    if clean_data_path:
-        save_data(df_processed, clean_data_path)
-
-    # 4. Encode features
-    X, y = encode_features(df_processed)
-
-    # 5. Train/test split
+    # Split
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y,
+        X,
+        y,
         test_size=0.2,
         random_state=42,
         stratify=y
     )
+    joblib.dump(X.columns.tolist(), "models/feature_columns.pkl")
 
-    # 6. Train model
+    # Train
     model = train_model(X_train, y_train)
 
-    # 7. Evaluate
-    evaluate_model(model, X_test, y_test)
+    # Evaluate
+    y_pred = evaluate_model(model, X_test, y_test)
 
-    # 8. Save model
-    if model_path:
-        save_model(model, model_path)
+    # Visuals
+    plot_confusion_matrix(
+        y_test,
+        y_pred,
+        "visuals/model/confusion_matrix.html"
+    )
 
-    print("Pipeline completed successfully!")
+    plot_feature_importance(
+        model,
+        X,
+        "visuals/model/feature_importance.html"
+    )
 
+    # Save model
+    save_model(model, model_path)
 
-if __name__ == "__main__":
-    # Example usage when running directly
-    raw_path = "data/raw/addiction_population_data.csv"
-    clean_path = "data/cleaned/addiction_population_clean.csv"
-    model_path = "models/random_forest_model.pkl"
-
-    run_pipeline(raw_path, clean_path, model_path)
+    print("Pipeline completed successfully.")

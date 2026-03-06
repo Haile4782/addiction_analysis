@@ -1,73 +1,62 @@
-import os
 import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
 
-def load_data(path):
-    """Load dataset from CSV"""
-    if not os.path.exists(path):
-        raise FileNotFoundError(f"File not found: {path}")
+
+def load_data(path: str) -> pd.DataFrame:
+    """
+    Load dataset and clean column names.
+    """
     df = pd.read_csv(path)
-    print(f"Loaded data: {df.shape}")
+
+    df.columns = (
+        df.columns
+        .str.strip()
+        .str.lower()
+        .str.replace(" ", "_")
+    )
+
     return df
 
 
-def cap_outliers(df, col):
-    """Cap outliers using IQR method"""
-    Q1 = df[col].quantile(0.25)
-    Q3 = df[col].quantile(0.75)
-    IQR = Q3 - Q1
-    lower = Q1 - 1.5 * IQR
-    upper = Q3 + 1.5 * IQR
-    df[col] = df[col].clip(lower, upper)
-    return df
+def create_addiction_score(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Create a composite addiction score based on smoking and drinking behavior.
+    """
 
-
-def clean_data(df):
-    """Clean dataset: duplicates, missing, outliers, logical checks"""
     df = df.copy()
 
-    print("\n🔹 Initial shape:", df.shape)
+    required_cols = ["smokes_per_day", "drinks_per_week"]
 
-    # Remove duplicates
-    df = df.drop_duplicates()
+    for col in required_cols:
+        if col not in df.columns:
+            raise ValueError(f"Missing required column: {col}")
 
-    # Handle missing values
-    df["social_support"] = df["social_support"].fillna("Unknown")
+    scaler = MinMaxScaler()
 
-    # Cap outliers in numeric columns
-    outlier_cols = ["smokes_per_day", "drinks_per_week", "sleep_hours", "bmi"]
-    for col in outlier_cols:
-        if col in df.columns:
-            df = cap_outliers(df, col)
+    df[["smokes_scaled", "drinks_scaled"]] = scaler.fit_transform(
+        df[["smokes_per_day", "drinks_per_week"]]
+    )
 
-    # Logical checks
-    df = df[df["age_started_smoking"] <= df["age"]]
-    df = df[df["age_started_drinking"] <= df["age"]]
+    # Composite addiction score (weighted equally)
+    df["addiction_score"] = (
+        0.5 * df["smokes_scaled"] +
+        0.5 * df["drinks_scaled"]
+    )
 
-    print("✅ Final shape after cleaning:", df.shape)
     return df
 
 
-def create_target_variable(df):
-    """Create addiction_score and binary risk label"""
+def create_target_variable(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Convert addiction score into risk categories.
+    """
+
     df = df.copy()
-    df["addiction_score"] = df["smokes_per_day"] + df["drinks_per_week"]
-    df["addiction_risk"] = (df["addiction_score"] > 25).astype(int)
+
+    df["addiction_risk"] = pd.qcut(
+        df["addiction_score"],
+        q=3,
+        labels=["Low", "Medium", "High"]
+    )
+
     return df
-
-
-def save_data(df, path):
-    """Save cleaned DataFrame"""
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    df.to_csv(path, index=False)
-    print(f"💾 Saved cleaned data to: {path}")
-
-
-# Standalone run (for testing)
-if __name__ == "__main__":
-    raw_path = "data/raw/addiction_population_data.csv"
-    clean_path = "data/cleaned/addiction_population_clean.csv"
-
-    df = load_data(raw_path)
-    df_clean = clean_data(df)
-    df_clean = create_target_variable(df_clean)
-    save_data(df_clean, clean_path)

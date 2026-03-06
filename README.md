@@ -94,7 +94,7 @@ cd addiction_analysis
 ### 2. Create & activate environment
 ```
 python -m venv .venv
-.\.venv\Scripts\activate     # Windows
+.\venv_313\Scripts\activate     # Windows
 # source .venv/bin/activate  # macOS/Linux
 ```
 
@@ -118,7 +118,7 @@ streamlit run app.py
 ## 📈 Key Insights
 
 - Smoking frequency and alcohol consumption are the strongest predictors of high addiction risk.
-- Poor mental health and low sleep hours show strong correlation with higher addiction scores.
+- Poor mental health and low sleep hours show a strong correlation with higher addiction scores.
 - Strong social support appears to be a protective factor against addiction.
 - The model performs exceptionally well on the majority class (Low Risk) with minor challenges on the minority class (High Risk) due to class imbalance.
 
@@ -127,7 +127,7 @@ streamlit run app.py
 ## 🎯 Live Demo
 
 **Try the live prediction app here:**  
-https://addictionanalysis-haiyleyesus.streamlit.app/
+[https://addictionanalysis-haiyleyesus.streamlit.app/](https://addictionanalysis-hab.streamlit.app/)
 
 ---
 

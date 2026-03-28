@@ -127,7 +127,7 @@ streamlit run app.py
 ## 🎯 Live Demo
 
 **Try the live prediction app here:**  
-[https://addictionanalysis-haiyleyesus.streamlit.app/](https://addictionanalysis-hab.streamlit.app/)
+https://addictionanalysis-hab.streamlit.app/
 
 ---
 

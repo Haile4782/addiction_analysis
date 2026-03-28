@@ -21,7 +21,7 @@
 - Interactive **Streamlit dashboard** for real-time risk prediction
 - Complete modular pipeline (data cleaning → feature engineering → training → evaluation)
 - Clean, reproducible code structure with `src/` architecture
-- Live demo available: https://addictionanalysis-haiyleyesus.streamlit.app/
+- Live demo available: https://addictionanalysis-hab.streamlit.app/
 
 ---
 
